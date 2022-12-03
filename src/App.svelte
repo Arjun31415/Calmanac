@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Month from "./lib/Month.svelte";
+  import Calendar from "./lib/Calendar.svelte";
 </script>
 
 <main class="container">
   <section>
-    <Month month={11} year={2022} />
+    <Calendar month={11} year={1977} />
   </section>
 </main>
 

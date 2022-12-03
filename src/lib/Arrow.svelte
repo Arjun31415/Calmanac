@@ -22,7 +22,7 @@
   /></svg
 >
 
-<style>
+<style lang="css">
   svg {
     width: 2rem;
     height: 2rem;

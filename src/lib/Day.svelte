@@ -9,7 +9,7 @@
   <span class="date__inner" class:today={isToday}>{date}</span>
 </span>
 
-<style type="text/css">
+<style lang="css">
   .date {
     height: 50px;
     font-size: 16px;
