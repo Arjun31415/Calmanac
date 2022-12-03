@@ -47,7 +47,6 @@
     month = today_month;
     year = today_year;
     current = calendarize(new Date(year, month), offset);
-
   }
 
   function toNext() {
