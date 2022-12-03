@@ -3,10 +3,8 @@
     windows_subsystem = "windows"
 )]
 use ical::parser::ical::component::IcalCalendar;
-use serde::ser::SerializeStruct;
 use serde::Serialize;
-use serde::Serializer;
-use std::fs::{self, DirEntry};
+use std::fs::{self};
 use std::path::Path;
 use std::{fs::File, io::BufReader};
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -14,6 +12,7 @@ use std::{fs::File, io::BufReader};
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
+
 #[derive(Serialize)]
 struct CalmanacCalendar(IcalCalendar);
 impl CalmanacCalendar {
@@ -21,7 +20,6 @@ impl CalmanacCalendar {
         CalmanacCalendar(calendar)
     }
 }
-
 
 #[tauri::command]
 fn get_all_calendars() -> Vec<CalmanacCalendar> {
@@ -39,6 +37,7 @@ fn parse_ics_file(path: &str) -> CalmanacCalendar {
     // print!("{:?}", calendar.events[0].properties);
     calendar
 }
+
 /// given a path to a directory, recursively (till max_depth is reached)
 ///  search for .ics files
 /// and parse them into a vector of CalmanacCalendar
