@@ -1,12 +1,30 @@
 <script lang="ts">
-  export let date: number;
+  import { day } from "../store/stores";
+  export let dateNum: number;
+  export let date: Date;
   export let isToday: boolean;
   let classesToAdd;
   export { classesToAdd as class };
+
+  function setDay() {
+    console.log(date);
+    day.set(date);
+  }
+  function handleKeypress(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      setDay();
+    }
+  }
 </script>
 
-<span class={`date ${classesToAdd || ""}`}>
-  <span class="date__inner" class:today={isToday}>{date}</span>
+<span
+  class={`date ${classesToAdd || ""}`}
+  on:click={setDay}
+  on:keypress={handleKeypress}
+  role="button"
+  tabindex="0"
+>
+  <span class="date__inner" class:today={isToday}>{dateNum}</span>
 </span>
 
 <style lang="css">

@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
   import Arrow from "./Arrow.svelte";
   import Day from "./Day.svelte";
 
   export let today = new Date(); // Date
-  export let year = today.getFullYear(); // number
-  export let month = today.getMonth(); // number
-  export let offset = 0; // Sun
+  export let year: number = today.getFullYear(); // number
+  export let month: number = today.getMonth();
+  export let offset: number = 0; // Sun
 
   export let labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   export let months = [
@@ -43,6 +43,12 @@
 
     prev = calendarize(new Date(year, month - 1), offset);
   }
+  function jumpToToday() {
+    month = today_month;
+    year = today_year;
+    current = calendarize(new Date(year, month), offset);
+
+  }
 
   function toNext() {
     [prev, current] = [current, next];
@@ -55,18 +61,35 @@
     next = calendarize(new Date(year, month + 1), offset);
   }
 
-  function isToday(day) {
+  function isToday(day: number) {
     return (
       today && today_year === year && today_month === month && today_day === day
     );
   }
-  console.log(current);
 </script>
 
 <header>
-  <Arrow left on:click={toPrev} />
-  <h4>{months[month]} {year}</h4>
-  <Arrow on:click={toNext} />
+  <div>
+    <Arrow
+      left
+      on:click={toNext}
+      on:keypress={(e) => {
+        if (e.key === "Enter") {
+          toNext();
+        }
+      }}
+    />
+    <h4>{months[month]} {year}</h4>
+    <Arrow
+      on:click={toNext}
+      on:keypress={(e) => {
+        if (e.key === "Enter") {
+          toNext();
+        }
+      }}
+    />
+  </div>
+  <button class="goto_today" tabindex="0" on:click={jumpToToday}>Today</button>
 </header>
 
 <div class="month">
@@ -79,18 +102,25 @@
       {#each { length: 7 } as _, idxd (idxd)}
         {#if current[idxw][idxd] != 0}
           <Day
-            date={current[idxw][idxd]}
+            dateNum={current[idxw][idxd]}
             isToday={isToday(current[idxw][idxd])}
             class="date"
+            date={new Date(year, month, current[idxw][idxd])}
           />
         {:else if idxw < 1}
           <Day
-            date={prev[prev.length - 1][idxd]}
+            dateNum={prev[prev.length - 1][idxd]}
             isToday={false}
             class="date other"
+            date={new Date(year, month - 1, prev[prev.length - 1][idxd])}
           />
         {:else}
-          <Day date={next[0][idxd]} isToday={false} class="date other" />
+          <Day
+            dateNum={next[0][idxd]}
+            isToday={false}
+            class="date other"
+            date={new Date(year, month + 1, next[0][idxd])}
+          />
         {/if}
       {/each}
     {/if}
@@ -104,6 +134,13 @@
     align-items: center;
     justify-content: center;
     user-select: none;
+    flex-direction: column;
+  }
+  header div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
   }
 
   h4 {
@@ -127,5 +164,22 @@
     text-transform: uppercase;
     margin-bottom: 0.5rem;
     opacity: 0.6;
+  }
+  .goto_today {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 1rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  .goto_today:focus {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+  .goto_today:hover {
+    color: #000;
+    background-color: aqua;
+    transform: scale(1.1);
   }
 </style>
