@@ -1,4 +1,5 @@
 <script>
+  // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
   import Arrow from "./Arrow.svelte";
   import Day from "./Day.svelte";
@@ -96,7 +97,7 @@
   {/each}
 </div>
 
-<style>
+<style lang="css">
   header {
     display: flex;
     margin: 2rem auto;
