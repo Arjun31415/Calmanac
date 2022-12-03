@@ -71,7 +71,7 @@
   <div>
     <Arrow
       left
-      on:click={toNext}
+      on:click={toPrev}
       on:keypress={(e) => {
         if (e.key === "Enter") {
           toPrev();
