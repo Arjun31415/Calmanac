@@ -74,7 +74,7 @@
       on:click={toNext}
       on:keypress={(e) => {
         if (e.key === "Enter") {
-          toNext();
+          toPrev();
         }
       }}
     />

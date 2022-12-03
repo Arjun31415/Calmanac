@@ -3,7 +3,7 @@
   export let dateNum: number;
   export let date: Date;
   export let isToday: boolean;
-  let classesToAdd;
+  let classesToAdd: string;
   export { classesToAdd as class };
 
   function setDay() {
