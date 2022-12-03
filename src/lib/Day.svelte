@@ -10,16 +10,33 @@
     console.log(date);
     day.set(date);
   }
+  function showDayDetails() {
+    console.log("showDayDetails");
+    // import the module and pass hidden false to it
+    import("./DayDetails.svelte").then((module) => {
+      new module.default({
+        target: document.body,
+        props: {
+          hidden: false,
+        },
+      });
+    });
+  }
+  function handleClick() {
+    console.log("handleClick");
+    setDay();
+    showDayDetails();
+  }
   function handleKeypress(e: KeyboardEvent) {
     if (e.key === "Enter") {
-      setDay();
+      handleClick();
     }
   }
 </script>
 
 <span
   class={`date ${classesToAdd || ""}`}
-  on:click={setDay}
+  on:click={handleClick}
   on:keypress={handleKeypress}
   role="button"
   tabindex="0"
@@ -27,6 +44,7 @@
   <span class="date__inner" class:today={isToday}>{dateNum}</span>
 </span>
 
+<!-- <svelte:component this={dateDetails} /> -->
 <style lang="css">
   .date {
     height: 50px;
