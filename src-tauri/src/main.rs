@@ -104,7 +104,6 @@ fn get_config() -> Config {
 }
 
 fn main() {
-    let calendars_path = CONFIG.calendars_path.clone();
     dbg!(&CONFIG);
     // parse_ics_file("/home/arjun/.calendars/arjun_local/arjunp0710@gmail.com/fe023000-3100-11ec-87ea-d5cae93c00a8.ics");
     // let temp = get_all_calendars();
