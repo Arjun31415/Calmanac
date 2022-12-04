@@ -2,7 +2,9 @@
   // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
   import Arrow from "./Arrow.svelte";
+  import type { CalendarEvents } from "../types/CalendarEvents";
   import Day from "./Day.svelte";
+  import { invoke } from "@tauri-apps/api/tauri";
 
   export let today = new Date(); // Date
   export let year: number = today.getFullYear(); // number
@@ -24,6 +26,12 @@
     "Nov",
     "Dec",
   ];
+  // tauri invoke
+  let calendar_events: CalendarEvents;
+  invoke("get_all_calendar_events").then((res: CalendarEvents) => {
+    calendar_events = res;
+    console.log(calendar_events[0].events[0].properties);
+  });
 
   $: today_month = today && today.getMonth();
   $: today_year = today && today.getFullYear();
