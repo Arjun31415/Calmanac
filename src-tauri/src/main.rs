@@ -31,7 +31,7 @@ impl CalmanacCalendar {
 }
 
 #[tauri::command]
-fn get_all_calendars() -> Vec<CalmanacCalendar> {
+fn get_all_calendar_events() -> Vec<CalmanacCalendar> {
     let calendars_path = CONFIG.calendars_path.clone();
 
     return get_calendars_from_directory(Path::new(&calendars_path), 3);
@@ -110,7 +110,7 @@ fn main() {
     // let temp = get_all_calendars();
     // println!("{:?}", temp.len());
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, get_all_calendars])
+        .invoke_handler(tauri::generate_handler![greet, get_all_calendar_events])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
