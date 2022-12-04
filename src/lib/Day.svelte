@@ -44,7 +44,6 @@
   <span class="date__inner" class:today={isToday}>{dateNum}</span>
 </span>
 
-<!-- <svelte:component this={dateDetails} /> -->
 <style lang="css">
   .date {
     height: 50px;
