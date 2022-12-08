@@ -1,6 +1,7 @@
 # Tauri + Svelte + Typescript
 
-This template should help get you started developing with Tauri, Svelte and TypeScript in Vite.
+Calendar desktop app for linux
+(WIP)
 
 ## Recommended IDE Setup
 
