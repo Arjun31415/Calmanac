@@ -2,11 +2,20 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+use directories::ProjectDirs;
 use ical::parser::ical::component::IcalCalendar;
-use serde::Serialize;
+use once_cell::sync::Lazy;
+use serde::{Deserialize, Serialize};
 use std::fs::{self};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::{fs::File, io::BufReader};
+
+#[derive(Serialize, Debug, Deserialize, Clone)]
+struct Config {
+    calendars_path: String,
+    depth: u8,
+}
+static CONFIG: Lazy<Config> = Lazy::new(|| get_config());
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -22,8 +31,10 @@ impl CalmanacCalendar {
 }
 
 #[tauri::command]
-fn get_all_calendars() -> Vec<CalmanacCalendar> {
-    return get_calendars_from_directory(Path::new("/home/arjun/.calendars"), 3);
+fn get_all_calendar_events() -> Vec<CalmanacCalendar> {
+    let calendars_path = CONFIG.calendars_path.clone();
+
+    return get_calendars_from_directory(Path::new(&calendars_path), 3);
 }
 // given a path to .ics file, parse it
 fn parse_ics_file(path: &str) -> CalmanacCalendar {
@@ -63,13 +74,42 @@ fn get_calendars_from_directory(dir: &Path, max_depth: i32) -> Vec<CalmanacCalen
     }
     cal
 }
+fn get_config_dir() -> PathBuf {
+    let project_dirs = ProjectDirs::from("com", "calmanac", "calmanac").unwrap();
+    let config_dir = project_dirs.config_dir();
+    if !config_dir.exists() {
+        fs::create_dir_all(config_dir).unwrap();
+    }
+    config_dir.to_path_buf()
+}
+fn get_config_file_path() -> String {
+    let config_dir = get_config_dir();
+    let config_file_path = config_dir.join("config.toml");
+    config_file_path.to_str().unwrap().to_string()
+}
+fn get_config() -> Config {
+    let config_file_path = get_config_file_path();
+    dbg!(&config_file_path);
+    let config_str = fs::read_to_string(config_file_path).unwrap_or("".to_string());
+    let config: Config = toml::from_str(&config_str).unwrap_or(Config {
+        // todo give default value
+        calendars_path: get_config_dir()
+            .join(Path::new("calendars"))
+            .to_str()
+            .unwrap()
+            .to_string(),
+        depth: 5,
+    });
+    config
+}
 
 fn main() {
+    dbg!(&CONFIG);
     // parse_ics_file("/home/arjun/.calendars/arjun_local/arjunp0710@gmail.com/fe023000-3100-11ec-87ea-d5cae93c00a8.ics");
-    let temp = get_calendars_from_directory(Path::new("/home/arjun/.calendars"), 3);
-    println!("{:?}", temp.len());
+    // let temp = get_all_calendars();
+    // println!("{:?}", temp.len());
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, get_all_calendars])
+        .invoke_handler(tauri::generate_handler![greet, get_all_calendar_events])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -4,7 +4,9 @@
   // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
   import Arrow from "./Arrow.svelte";
+  import type { CalendarEvents } from "../types/CalendarEvents";
   import Day from "./Day.svelte";
+  import { invoke } from "@tauri-apps/api/tauri";
 
   export let today = new Date(); // Date
   export let year: number = today.getFullYear(); // number
@@ -82,7 +84,7 @@
   <div>
     <Arrow
       left
-      on:click={toNext}
+      on:click={toPrev}
       on:keypress={(e) => {
         if (e.key === "Enter") {
           toPrev();
@@ -165,7 +167,6 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: right;
-    grid-gap: 4px;
   }
 
   .label {
