@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/tauri";
   import { onDestroy } from "svelte";
   // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
