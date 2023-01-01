@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   // @ts-ignore
   import calendarize from "https://unpkg.com/calendarize?module";
   import Arrow from "./Arrow.svelte";
@@ -11,7 +12,7 @@
   export let year: number = today.getFullYear(); // number
   export let month: number = today.getMonth();
   export let offset: number = 0; // Sun
-
+  $: events = [];
   export let labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   export let months = [
     "Jan", 
@@ -27,13 +28,16 @@
     "Nov",
     "Dec",
   ];
-  // tauri invoke
-  let calendar_events: CalendarEvents;
-  invoke("get_all_calendar_events").then((res: CalendarEvents) => {
-    calendar_events = res;
-    console.log(calendar_events[0].events[0].properties);
+  async function getCalendarEvents() {
+    events = await invoke("get_all_calendars");
+    console.log("Getting calendars");
+    console.log(events[100].events[0].properties[2]);
+    /* console.log(events); */
+  }
+  const interval = setInterval(getCalendarEvents, 10000);
+  onDestroy(() => {
+    clearInterval(interval);
   });
-
   $: today_month = today && today.getMonth();
   $: today_year = today && today.getFullYear();
   $: today_day = today && today.getDate();
