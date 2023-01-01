@@ -5,6 +5,7 @@
   import type { CalendarEvents } from "../types/CalendarEvents";
   import Day from "./Day.svelte";
   import { invoke } from "@tauri-apps/api/tauri";
+  import iCalDateParser from "../utils/ICalDateParser";
 
   export let today = new Date(); // Date
   export let year: number = today.getFullYear(); // number
@@ -13,7 +14,7 @@
 
   export let labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   export let months = [
-    "Jan",
+    "Jan", 
     "Feb",
     "Mar",
     "Apr",
